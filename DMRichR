@@ -1,0 +1,283 @@
+#DMRichR
+#developed by Ben Laufer: https://github.com/ben-laufer/DMRichR
+
+###CfDNA###
+##ASD##
+#Sex-Combined#
+
+# Activate the conda environment
+conda activate /share/lasallelab/programs/.conda/DMRichR_R4.2
+
+########
+# DM.R #
+########
+
+# Run with defaults
+
+call="Rscript \
+--vanilla \
+/share/lasallelab/programs/DMRichR/DM_R4.2.R \
+--genome hg38 \
+--coverage 1 \
+--perGroup '0.75' \
+--minCpGs 5 \
+--maxPerms 100 \
+--maxBlockPerms 10 \
+--cutoff '0.05' \
+--testCovariate NonASD_Diagnosis \
+--adjustCovariate 'BMI;Sex' \
+--sexCheck FALSE \
+--GOfuncR TRUE \
+--EnsDb FALSE \
+--cores 60 "
+
+echo $call
+eval $call
+
+#Males#
+
+# Activate the conda environment
+conda activate /share/lasallelab/programs/.conda/DMRichR_R4.2
+
+########
+# DM.R #
+########
+
+# Run with defaults
+
+call="Rscript \
+--vanilla \
+/share/lasallelab/programs/DMRichR/DM_R4.2.R \
+--genome hg38 \
+--coverage 1 \
+--perGroup '0.75' \
+--minCpGs 5 \
+--maxPerms 100 \
+--maxBlockPerms 10 \
+--cutoff '0.05' \
+--testCovariate NonASD_Diagnosis \
+--adjustCovariate 'BMI' \
+--sexCheck FALSE \
+--GOfuncR TRUE \
+--EnsDb FALSE \
+--cores 60 "
+
+echo $call
+eval $call
+
+#Females#
+
+# Activate the conda environment
+conda activate /share/lasallelab/programs/.conda/DMRichR_R4.2
+
+########
+# DM.R #
+########
+
+# Run with defaults
+
+call="Rscript \
+--vanilla \
+/share/lasallelab/programs/DMRichR/DM_R4.2.R \
+--genome hg38 \
+--coverage 1 \
+--perGroup '0.75' \
+--minCpGs 5 \
+--maxPerms 100 \
+--maxBlockPerms 10 \
+--cutoff '0.05' \
+--testCovariate NonASD_Diagnosis \
+--adjustCovariate 'BMI' \
+--sexCheck FALSE \
+--GOfuncR TRUE \
+--EnsDb FALSE \
+--cores 60 "
+
+echo $call
+eval $call
+
+##MO##
+#Males#
+
+# Activate the conda environment
+conda activate /share/lasallelab/programs/.conda/DMRichR_R4.2
+
+########
+# DM.R #
+########
+
+# Run with defaults
+
+call="Rscript \
+--vanilla \
+/share/lasallelab/programs/DMRichR/DM_R4.2.R \
+--genome hg38 \
+--coverage 1 \
+--perGroup '0.75' \
+--minCpGs 5 \
+--maxPerms 100 \
+--maxBlockPerms 10 \
+--cutoff '0.05' \
+--testCovariate BMI \
+--sexCheck FALSE \
+--GOfuncR TRUE \
+--EnsDb FALSE \
+--cores 60 "
+
+echo $call
+eval $call
+
+#Females#
+# Activate the conda environment
+conda activate /share/lasallelab/programs/.conda/DMRichR_R4.2
+
+########
+# DM.R #
+########
+
+# Run with defaults
+
+call="Rscript \
+--vanilla \
+/share/lasallelab/programs/DMRichR/DM_R4.2.R \
+--genome hg38 \
+--coverage 1 \
+--perGroup '0.75' \
+--minCpGs 5 \
+--maxPerms 100 \
+--maxBlockPerms 10 \
+--cutoff '0.05' \
+--testCovariate BMI \
+--sexCheck FALSE \
+--GOfuncR TRUE \
+--EnsDb FALSE \
+--cores 60 "
+
+echo $call
+eval $call
+
+###Placenta###
+##ASD##
+#Males#
+
+# Activate the conda environment
+conda activate /share/lasallelab/programs/.conda/DMRichR_R4.2
+
+########
+# DM.R #
+########
+
+# Run with defaults
+
+call="Rscript \
+--vanilla \
+/share/lasallelab/programs/DMRichR/DM_R4.2.R \
+--genome hg38 \
+--coverage 1 \
+--perGroup '0.75' \
+--minCpGs 5 \
+--maxPerms 100 \
+--maxBlockPerms 10 \
+--cutoff '0.05' \
+--testCovariate ASD_Diagnosis_All \
+--adjustCovariate 'BMI' \
+--sexCheck FALSE \
+--GOfuncR TRUE \
+--EnsDb FALSE \
+--cores 42 "
+
+echo $call
+eval $call
+
+#Females#
+
+# Activate the conda environment
+conda activate /share/lasallelab/programs/.conda/DMRichR_R4.2
+
+########
+# DM.R #
+########
+
+# Run with defaults
+
+call="Rscript \
+--vanilla \
+/share/lasallelab/programs/DMRichR/DM_R4.2.R \
+--genome hg38 \
+--coverage 1 \
+--perGroup '0.75' \
+--minCpGs 5 \
+--maxPerms 100 \
+--maxBlockPerms 10 \
+--cutoff '0.05' \
+--testCovariate ASD_Diagnosis_All \
+--adjustCovariate 'BMI' \
+--sexCheck FALSE \
+--GOfuncR TRUE \
+--EnsDb FALSE \
+--cores 42 "
+
+echo $call
+eval $call
+
+###Cortex###
+##ASD##
+#Males
+
+# Activate the conda environment
+conda activate /quobyte/lasallegrp/programs/.conda/envs/DMRichR4.2_Updated/
+########
+# DM.R #
+########
+
+# Run with defaults
+
+call="Rscript
+--vanilla
+/quobyte/lasallegrp/programs/DMRichR/DM_R4.2.R
+--genome hg38
+--coverage 1
+--perGroup '0.75'
+--minCpGs 5
+--maxPerms 100
+--maxBlockPerms 10
+--cutoff '0.05'
+--testCovariate ASD_Diagnosis
+--adjustCovariate 'Age'
+--sexCheck FALSE
+--GOfuncR TRUE
+--EnsDb FALSE
+--cores 20"
+
+echo $call
+eval $call
+
+#Females#
+
+# Activate the conda environment
+conda activate /quobyte/lasallegrp/programs/.conda/envs/DMRichR4.2_Updated/
+########
+# DM.R #
+########
+
+# Run with defaults
+
+call="Rscript
+--vanilla
+/quobyte/lasallegrp/programs/DMRichR/DM_R4.2.R
+--genome hg38
+--coverage 1
+--perGroup '0.75'
+--minCpGs 5
+--maxPerms 100
+--maxBlockPerms 10
+--cutoff '0.05'
+--testCovariate ASD_Diagnosis
+--adjustCovariate 'Age'
+--sexCheck FALSE
+--GOfuncR TRUE
+--EnsDb FALSE
+--cores 20"
+
+echo $call
+eval $call
