@@ -1,0 +1,96 @@
+###PCA of cfDNA DMR Smoothed Methylation###
+
+##ASD##
+#Males#
+Smoothed_males <- read.xlsx("10_DMRichR_NonASDvsADD_InclSexStrat/10_DMRichR_MalesOnly_NonASDvsASD/DMR_individual_smoothed_methylation_only.xlsx")
+Smoothedmales_transposed <- t(Smoothed_males)
+pca_result <- prcomp(Smoothedmales_transposed, scale. = TRUE)
+summary(pca_result)
+pca_scores <- pca_result$x
+pca_scores_df <- as.data.frame(pca_scores)
+print(pca_scores_df)
+write.xlsx(pca_scores_df, "10_DMRichR_NonASDvsADD_InclSexStrat/10_DMRichR_MalesOnly_NonASDvsASD/MalesOnly_ASDDMR_PCA_Results.xlsx")
+
+#Covariates added to xlsx file to facilitate plotting
+
+annotated_pca <- read.xlsx("10_DMRichR_NonASDvsADD_InclSexStrat/10_DMRichR_MalesOnly_NonASDvsASD/MalesOnly_ASDDMR_PCA_Results_withCovars.xlsx")
+#Plot the graph#
+ggplot(annotated_pca, aes(x = PC1, y = PC2, color = Diagnosis, fill = Diagnosis)) +
+  geom_point(size = 3) + 
+  stat_ellipse(type = "norm", level = 0.95, linetype = "solid", alpha = 0.75) +  
+  theme_minimal() +
+  labs(title = "PCA Plot of Male ASD DMR Smoothed Methylation", x = "PC1 (41.2%)", y = "PC2 (5.70%)") +
+  theme(legend.title = element_text(size = 12), 
+        legend.text = element_text(size = 10)) 
+
+ggplot(annotated_pca, aes(x = PC1, y = PC2)) +
+  geom_point(aes(color = ADOS_Score, fill = ADOS_Score), size = 3, shape = 21) +
+  stat_ellipse(type = "norm", aes(group = Diagnosis, linetype = as.factor(Diagnosis)), color = "black") +
+  scale_color_gradient(low = "red", high = "blue") +
+  scale_fill_gradient(low = "red", high = "blue") +
+  theme_minimal() +
+  labs(title = "PCA Plot of Male ASD DMR Smoothed Methylation Colored by ADOS", 
+       x = "PC1 (41.2%)", 
+       y = "PC2 (4.69%)",
+       linetype = "Diagnosis") +
+  theme(legend.title = element_text(size = 12), 
+        legend.text = element_text(size = 10))
+
+ggplot(na.omit(annotated_pca), aes(x = PC1, y = PC2, color = Mullens_Score, fill = Mullens_Score)) +
+  geom_point(size = 3, shape = 21) +  # shape 21 uses both fill and color
+  stat_ellipse(type = "norm", aes(group = Diagnosis, linetype = Diagnosis), color = "black") +
+  scale_color_gradient(low = "blue", high = "red") +
+  scale_fill_gradient(low = "blue", high = "red") +
+  theme_minimal() +
+  labs(title = "PCA Plot of Male ASD DMR Smoothed Methylation Colored by Mullens Scores", 
+       x = "PC1 (41.2%)", 
+       y = "PC2 (4.69%)") +
+  theme(legend.title = element_text(size = 12), 
+        legend.text = element_text(size = 10))
+
+#Females#
+Smoothed_females <- read.xlsx("10_DMRichR_NonASDvsADD_InclSexStrat/10_DmRichR_FemalesOnly_NonASDvsASD/DMRs/DMR_individual_smoothed_methylation_only.xlsx")
+Smoothedfemales_transposed <- t(Smoothed_females)
+pca_result <- prcomp(Smoothedfemales_transposed, scale. = TRUE)
+summary(pca_result)
+pca_scores <- pca_result$x
+pca_scores_df <- as.data.frame(pca_scores)
+print(pca_scores_df)
+write.xlsx(pca_scores_df, "10_DMRichR_NonASDvsADD_InclSexStrat/10_DmRichR_FemalesOnly_NonASDvsASD/FemalesOnly_ASDDMR_PCA_Results.xlsx")
+
+#Covariates added to xlsx file to facilitate plotting
+
+annotated_pca <- read.xlsx("10_DMRichR_NonASDvsADD_InclSexStrat/10_DmRichR_FemalesOnly_NonASDvsASD/FemalesOnly_ASDDMR_PCA_Results_withCovars.xlsx")
+#Plot the graph#
+ggplot(annotated_pca, aes(x = PC1, y = PC2, color = Diagnosis, fill = Diagnosis)) +
+  geom_point(size = 3) +  # Plot the points with a specified size
+  stat_ellipse(type = "norm", level = 0.95, linetype = "solid", alpha = 0.75) +  # Solid line and filled ellipses
+  theme_minimal() +
+  labs(title = "PCA Plot of Female ASD DMR Smoothed Methylation", x = "PC1 (32.0%)", y = "PC2 (13.6%)") +
+  theme(legend.title = element_text(size = 12), 
+        legend.text = element_text(size = 10))  # Customize legend text size
+
+annotated_pca <- read.xlsx("10_DmRichR_FemalesOnly_NonASDvsASD/FemalesOnly_ASDDMR_PCA_Results_withCovars.xlsx")
+ggplot(annotated_pca, aes(x = PC1, y = PC2, color = ADOS_Score, fill = ADOS_Score)) +
+  geom_point(size = 3, shape = 21) +  
+  stat_ellipse(type = "norm", aes(group = Diagnosis, linetype = Diagnosis), color = "black") +
+  scale_color_gradient(low = "red", high = "blue") +
+  scale_fill_gradient(low = "red", high = "blue") +
+  theme_minimal() +
+  labs(title = "PCA Plot of Female ASD DMR Smoothed Methylation Colored by ADOS", 
+       x = "PC1 (32.0%)", 
+       y = "PC2 (13.6%)") +
+  theme(legend.title = element_text(size = 12), 
+        legend.text = element_text(size = 10))
+
+ggplot(na.omit(annotated_pca), aes(x = PC1, y = PC2, color = Mullens_Score, fill = Mullens_Score)) +
+  geom_point(size = 3, shape = 21) +  
+  stat_ellipse(type = "norm", aes(group = Diagnosis, linetype = Diagnosis), color = "black") +
+  scale_color_gradient(low = "blue", high = "red") +
+  scale_fill_gradient(low = "blue", high = "red") +
+  theme_minimal() +
+  labs(title = "PCA Plot of Female ASD DMR Smoothed Methylation Colored by Mullens Scores", 
+       x = "PC1 (32.0%)", 
+       y = "PC2 (13.6%)") +
+  theme(legend.title = element_text(size = 12), 
+        legend.text = element_text(size = 10))
