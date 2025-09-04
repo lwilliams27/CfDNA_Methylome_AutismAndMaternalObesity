@@ -1,0 +1,75 @@
+###KEGG Pathway Enrichments###
+
+##CfDNA##
+#Male - ASD#
+gene_list <- Males_ASD_DMR_Genes
+gene_ids <- bitr(gene_list, fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db")
+kegg_enrichment <- enrichKEGG(gene = gene_ids$ENTREZID, organism = "hsa", pvalueCutoff = 1)
+head(kegg_enrichment)
+write.csv(as.data.frame(kegg_enrichment), "MalescfDNAASDDMRGenes_kegg_enrichment_results.csv")
+plot_top_kegg(kegg_enrichment, "", "Males_cfDNA_ASD_DMR_Genes_TopKEGG.pdf")
+
+#Female - ASD#
+gene_list <- Females_ASD_DMR_Genes
+gene_ids <- bitr(gene_list, fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db")
+kegg_enrichment <- enrichKEGG(gene = gene_ids$ENTREZID, organism = "hsa", pvalueCutoff = 1)
+head(kegg_enrichment)
+write.csv(as.data.frame(kegg_enrichment), "FemalesOnlycfDNAASDDMRGenes_kegg_enrichment_results.csv")
+plot_top_kegg(kegg_enrichment, "", "Top_FemaleASDDMR_KEGG.pdf")
+
+#Male - MO#
+MalesOnlyMO_DMR_Genes <- read.xlsx("MO_DMRs_MaleOnly/DMRs/DMRs_annotated.xlsx")$geneSymbol
+gene_list <- MalesOnlyMO_DMR_Genes
+gene_ids <- bitr(gene_list, fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db")
+kegg_enrichment <- enrichKEGG(gene = gene_ids$ENTREZID, organism = "hsa", pvalueCutoff = 1)
+head(kegg_enrichment)
+write.csv(as.data.frame(kegg_enrichment), "MO_DMRs_MaleOnly/DMRichments/MalesOnlyMO_top_kegg_enrichment_results.csv")
+plot_top_kegg(kegg_enrichment, "")
+
+#Female - MO#
+FemalesOnlyMO_DMR_Genes <- read.xlsx("MO_DMRs_FemaleOnly/DMRs/DMRs_annotated.xlsx")$geneSymbol
+gene_list <- FemalesOnlyMO_DMR_Genes
+gene_ids <- bitr(gene_list, fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db")
+kegg_enrichment <- enrichKEGG(gene = gene_ids$ENTREZID, organism = "hsa", pvalueCutoff = 1)
+head(kegg_enrichment)
+write.csv(as.data.frame(kegg_enrichment), "MO_DMRs_FemaleOnly/DMRichments/FemalesOnlyMO_top_kegg_enrichment_results.csv")
+plot_top_kegg(kegg_enrichment, "")
+
+##Placenta##
+#Male - ASD#
+Placenta_DMRs <- read.xlsx("DMRs/MalesOnly_Placenta_DMRs_annotated.xlsx")$geneSymbol
+gene_list <- Placenta_DMRs
+gene_ids <- bitr(gene_list, fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db")
+kegg_enrichment <- enrichKEGG(gene = gene_ids$ENTREZID, organism = "hsa", pvalueCutoff = 1)
+head(kegg_enrichment)
+write.csv(as.data.frame(kegg_enrichment), "MalesPlacentaASDDMRGenes_kegg_enrichment_results.csv")
+plot_top_kegg(kegg_enrichment, "")
+
+#Female - ASD#
+Placenta_DMRs <- read.xlsx("DMRs/DMRs_annotated.xlsx")$geneSymbol
+gene_list <- Placenta_DMRs
+gene_ids <- bitr(gene_list, fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db")
+kegg_enrichment <- enrichKEGG(gene = gene_ids$ENTREZID, organism = "hsa", pvalueCutoff = 1)
+head(kegg_enrichment)
+write.csv(as.data.frame(kegg_enrichment), "FemalesOnlyPlacentaASDDMRGenes_kegg_enrichment_results.csv")
+plot_top_kegg(kegg_enrichment, "", "Top_FemaleASDDMR_KEGG.pdf")
+
+##Cortex##
+
+#Male - ASD#
+Cortex_DMRs <- read.xlsx("DMRs/DMRs_annotated.xlsx")$geneSymbol
+gene_list <- Cortex_DMRs
+gene_ids <- bitr(gene_list, fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db")
+kegg_enrichment <- enrichKEGG(gene = gene_ids$ENTREZID, organism = "hsa", pvalueCutoff = 1)
+head(kegg_enrichment)
+write.csv(as.data.frame(kegg_enrichment), "MalesOnlyCortexASDDMRGenes_kegg_enrichment_results.csv")
+plot_top_kegg(kegg_enrichment, "", "Top_MaleASDDMR_KEGG.pdf")
+
+#Female - ASD#
+Cortex_DMRs <- read.xlsx("DMRs/DMRs_annotated.xlsx")$geneSymbol
+gene_list <- Cortex_DMRs
+gene_ids <- bitr(gene_list, fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db")
+kegg_enrichment <- enrichKEGG(gene = gene_ids$ENTREZID, organism = "hsa", pvalueCutoff = 1)
+head(kegg_enrichment)
+write.csv(as.data.frame(kegg_enrichment), "FemalesOnlyCortexASDDMRGenes_kegg_enrichment_results.csv")
+plot_top_kegg(kegg_enrichment, "", "Top_FemaleASDDMR_KEGG.pdf")
