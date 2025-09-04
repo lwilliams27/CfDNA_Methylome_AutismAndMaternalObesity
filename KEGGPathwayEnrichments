@@ -2,6 +2,7 @@
 
 ##CfDNA##
 #Male - ASD#
+Males_ASD_DMR_Genes <- read.xlsx("10_DMRichR_NonASDvsADD_InclSexStrat/10_DMRichR_MalesOnly_NonASDvsASD/DMRs/MalesOnly_CfDNA_DMRs_annotated.xlsx")$geneSymbol
 gene_list <- Males_ASD_DMR_Genes
 gene_ids <- bitr(gene_list, fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db")
 kegg_enrichment <- enrichKEGG(gene = gene_ids$ENTREZID, organism = "hsa", pvalueCutoff = 1)
@@ -10,6 +11,7 @@ write.csv(as.data.frame(kegg_enrichment), "MalescfDNAASDDMRGenes_kegg_enrichment
 plot_top_kegg(kegg_enrichment, "", "Males_cfDNA_ASD_DMR_Genes_TopKEGG.pdf")
 
 #Female - ASD#
+Females_ASD_DMR_Genes <- read.xlsx("10_DMRichR_NonASDvsADD_InclSexStrat/10_DmRichR_FemalesOnly_NonASDvsASD/DMRs/Femalesonly_DMRs_annotated_cfDNA.xlsx")$geneSymbol
 gene_list <- Females_ASD_DMR_Genes
 gene_ids <- bitr(gene_list, fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db")
 kegg_enrichment <- enrichKEGG(gene = gene_ids$ENTREZID, organism = "hsa", pvalueCutoff = 1)
@@ -46,7 +48,7 @@ write.csv(as.data.frame(kegg_enrichment), "MalesPlacentaASDDMRGenes_kegg_enrichm
 plot_top_kegg(kegg_enrichment, "")
 
 #Female - ASD#
-Placenta_DMRs <- read.xlsx("DMRs/DMRs_annotated.xlsx")$geneSymbol
+Placenta_DMRs <- read.xlsx("DMRs/FemalesOnly_Placenta_DMRs_annotated.xlsx")$geneSymbol
 gene_list <- Placenta_DMRs
 gene_ids <- bitr(gene_list, fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db")
 kegg_enrichment <- enrichKEGG(gene = gene_ids$ENTREZID, organism = "hsa", pvalueCutoff = 1)
@@ -57,7 +59,7 @@ plot_top_kegg(kegg_enrichment, "", "Top_FemaleASDDMR_KEGG.pdf")
 ##Cortex##
 
 #Male - ASD#
-Cortex_DMRs <- read.xlsx("DMRs/DMRs_annotated.xlsx")$geneSymbol
+Cortex_DMRs <- read.xlsx("DMRs/MalesOnly_Cortex_DMRs_annotated.xlsx")$geneSymbol
 gene_list <- Cortex_DMRs
 gene_ids <- bitr(gene_list, fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db")
 kegg_enrichment <- enrichKEGG(gene = gene_ids$ENTREZID, organism = "hsa", pvalueCutoff = 1)
@@ -66,7 +68,7 @@ write.csv(as.data.frame(kegg_enrichment), "MalesOnlyCortexASDDMRGenes_kegg_enric
 plot_top_kegg(kegg_enrichment, "", "Top_MaleASDDMR_KEGG.pdf")
 
 #Female - ASD#
-Cortex_DMRs <- read.xlsx("DMRs/DMRs_annotated.xlsx")$geneSymbol
+Cortex_DMRs <- read.xlsx("DMRs/FemalesOnly_Cortex_DMRs_annotated.xlsx")$geneSymbol
 gene_list <- Cortex_DMRs
 gene_ids <- bitr(gene_list, fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db")
 kegg_enrichment <- enrichKEGG(gene = gene_ids$ENTREZID, organism = "hsa", pvalueCutoff = 1)
