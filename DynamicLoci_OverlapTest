@@ -1,0 +1,40 @@
+##DMR Gene Overlap with Spiers et al 2015 DMP Genes##
+#Loci identification done by Spiers et al 2015#
+#DOI: 10.1101/gr.180273.114
+
+install.packages("BiocManager")
+BiocManager::install("GeneOverlap")
+
+#Setup: Get a List of DMP Genes and their background#
+dmps <- read.csv("Spiers2015_dMPsList.csv", header = TRUE)
+dmps_genes <- strsplit(dmps$Gene.s., ";")
+dmps_genes <- unique(unlist(dmps_genes))
+#produces list of the 7693 unique genes annotated to the DMPs#
+
+#Now to determine the background genes of this dataset#
+#Data also from Illumina Infinium HumanMethylation450 BeadChip. Load this background into gene_symbol_list
+dmp_background <- gene_symbol_list
+#19798 genes in the background#
+
+#Male ASD DMR Gene X DMP Gene Overlap#
+shared_background <- intersect(Male_ASD_DMR_background, dmp_background)
+#shared background is 4053 genes#
+filtered_Male_ASD <- intersect(Male_ASD_DMR_Genes, shared_background)
+filtered_DMPGene <- intersect(dmps_genes, shared_background)
+overlaps <- newGeneOverlap(filtered_Male_ASD, filtered_DMPGene, genome.size = 4053)
+overlaps
+testGeneOverlap.obj <- testGeneOverlap(overlaps)
+testGeneOverlap.obj
+print(testGeneOverlap.obj)
+
+
+#Female ASD DMR Gene X DMP Gene Overlap#
+shared_background <- intersect(Female_ASD_DMR_background, dmp_background)
+#shared background is #3999 genes#
+filtered_Female_ASD <- intersect(Female_ASD_DMR_Genes, shared_background)
+filtered_DMPGene <- intersect(dmps_genes, shared_background)
+overlaps <- newGeneOverlap(filtered_Female_ASD, filtered_DMPGene, genome.size = 3999)
+overlaps
+testGeneOverlap.obj <- testGeneOverlap(overlaps)
+testGeneOverlap.obj
+print(testGeneOverlap.obj)
