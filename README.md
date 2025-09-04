@@ -1,2 +1,5 @@
 # CfDNA_Methylome_AutismAndMaternalObesity
 Differential methylation in cfDNA as defined by ASD diagnosis and MO diagnosis. 
+
+**Abstract**
+Early identification of autism spectrum disorder (ASD) remains a critical challenge, particularly in utero when non-genetic factors such as maternal obesity (MO) are implicated. Here, we report results of whole-genome bisulfite sequencing of cell-free DNA (cfDNA) from third-trimester maternal plasma in a high-likelihood ASD pregnancy cohort associated with child (3 y) ASD diagnosis and/or MO. Differentially methylated regions (DMRs) between ASD and control cfDNA were strongly enriched for synaptic functions and  genes previously implicated in ASD. These cfDNA ASD DMRs recapitulated those observed in ASD placenta and postmortem cortex and significantly overlapped with MO DMRs. Our findings establish cfDNA methylation derived from maternal blood as a minimally invasive window into fetal brain ASD etiology, providing a framework for future mechanistic and early intervention studies. Future studies could investigate additional prenatal environmental exposures interacting with genetics during neurodevelopment.
