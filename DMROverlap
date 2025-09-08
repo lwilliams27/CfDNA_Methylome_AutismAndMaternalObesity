@@ -1,0 +1,152 @@
+###DMR Overlap Tests###
+##CfDNA ASD DMRs - Male to Female##
+
+#Setup#
+conda activate /quobyte/lasallegrp/programs/.conda/envs/DMRichR4.2_Updated/
+R
+library(GenomicRanges)
+library(DMRichR)
+library(openxlsx)
+library(regioneR)
+library(BiocParallel)
+
+BiocParallel::register(BiocParallel::MulticoreParam(workers = 100))
+hg38 <- getGenome("hg38")
+standard_chr <- paste0("chr", c(1:22, "X", "Y"))
+hg38 <- filterChromosomes(hg38, keep.chr = standard_chr)
+
+#Define DMRs#
+MaleCfDNADMRs <- read.xlsx("05_Males/DMRs/DMRs_annotated.xlsx", sheet = 1, cols = 1:3)
+MaleCfDNADMRS <- toGRanges(MaleCfDNADMRs)
+FemaleCfDNADMRs <- read.xlsx("05_Females/DMRs/DMRs_annotated.xlsx", sheet = 1, cols = 1:3)
+FemaleCfDNADMRS <- toGRanges(FemaleCfDNADMRs)
+
+#Make function
+runPermutationAnalysis <- function(A, B, genome, output_pdf, ntimes = 10000) {
+  # Run overlap permutation test
+  perm_overlap <- regioneR::permTest(
+    A = A,
+    B = B,
+    genome = genome,
+    ntimes = ntimes,
+    evaluate.function = numOverlaps,
+    randomize.function = randomizeRegions,
+    alternative = "auto",
+    force.parallel = TRUE,
+    count.once = TRUE,
+    per.chromosome = TRUE,
+    verbose = TRUE
+  )
+  
+  # Run distance permutation test
+  perm_distance <- regioneR::permTest(
+    A = A,
+    B = B,
+    genome = genome,
+    ntimes = ntimes,
+    evaluate.function = meanDistance,
+    randomize.function = randomizeRegions,
+    alternative = "auto",
+    force.parallel = TRUE,
+    per.chromosome = TRUE,
+    verbose = TRUE
+  )
+  
+  # Save plots to PDF
+  pdf(output_pdf, width = 14, height = 6)
+  par(mfrow = c(1, 2), mar = c(5, 4, 4, 2))
+  
+  # Plot overlap test
+  plot(
+    perm_overlap,
+    main = paste(
+      "Overlap Test\n",
+      "p =", signif(perm_overlap$pval, 3),
+      "| Z =", round(perm_overlap$zscore, 2),
+      "| n =", length(perm_overlap$permuted),
+      "| method = randomizeRegions"
+    ),
+    xlab = "Number of Overlaps"
+  )
+  
+  # Plot distance test
+  plot(
+    perm_distance,
+    main = paste(
+      "Distance Test\n",
+      "p =", signif(perm_distance$pval, 3),
+      "| Z =", round(perm_distance$zscore, 2),
+      "| n =", length(perm_distance$permuted),
+      "| method = randomizeRegions"
+    ),
+    xlab = "Mean Distance"
+  )
+  
+  dev.off()
+  
+  return(list(overlap = perm_overlap, distance = perm_distance))
+}
+
+#Run function#
+runPermutationAnalysis(MaleCfDNADMRs, FemaleCfDNADMRs, hg38, "MaleAndFemale_ASDCfDNADMROverlap.pdf",ntimes = 10000)
+
+##Cross Tissue ASD DMRs##
+
+#Male cfDNA to Male Placenta#
+#Define new DMRs#
+MalePlacentaDMRs <- read.xlsx("Yihui_Placenta51_DMRs_MalesOnly/DMRs/DMRs_annotated.xlsx", sheet = 1, cols= 1:3)
+MalePlacentaDMRs <- toGRanges(MalePlacentaDMRs)
+
+#Run function#
+runPermutationAnalysis(MalecfDNADMRs, MalePlacentaDMRs, hg38, "MaleCfDNAandMalePlacenta_DMROverlapResults.pdf",ntimes = 10000)
+
+#Male cfDNA to Male Cortex#
+#Define new DMRs#
+MaleCortexDMRs <- read.xlsx("10_DMRichR_VogelCierniaCortex/Males_Redux/DMRs/DMRs_annotated.xlsx", sheet = 1, cols = 1:3)
+MaleCortexDMRs <- toGRanges(MaleCortexDMRs)
+
+#Run function#
+runPermutationAnalysis(MalecfDNADMRs, MaleCortexDMRs, hg38, "MaleCfDNAAndMaleCortex_DMROverlapResults.pdf",ntimes = 10000)
+
+#Male Placenta to Male Cortex#
+#Run function#
+runPermutationAnalysis(MalePlacentaDMRs, MaleCortexDMRs, hg38, "MalePlacentaAndMaleCortex_DMROverlapResults.pdf",ntimes = 10000)
+
+#Female cfDNA to Female Placenta#
+#Define DMRs
+FemalecfDNADMRs <- read.xlsx("05_Females/DMRs/DMRs_annotated.xlsx", sheet = 1, cols = 1:3)
+FemalecfDNADMRs <-toGRanges(FemalecfDNADMRs)
+FemalePlacentaDMRs <- read.xlsx("Yihui_Placenta51_FemalesOnly_DMRs/DMRs/DMRs_annotated.xlsx", sheet = 1, cols= 1:3)
+FemalePlacentaDMRs <- toGRanges(FemalePlacentaDMRs)
+
+#Run function#
+runPermutationAnalysis(FemalecfDNADMRs, FemalePlacentaDMRs, hg38, "FemaleCfDNAAndFemalePlacenta_DMROverlapResults.pdf",ntimes = 10000)
+
+#Female CfDNA to Female Cortex#
+#Define DMRs
+FemaleCortexDMRs <- read.xlsx("10_DMRichR_VogelCierniaCortex/Females_Redux/DMRs/DMRs_annotated.xlsx", sheet = 1, cols= 1:3)
+FemaleCortexDMRs <- toGRanges(FemaleCortexDMRs)
+
+#Run function#
+runPermutationAnalysis(FemalecfDNADMRs, FemaleCortexDMRs, hg38, "FemaleCfDNAAndFemaleCortex_DMROverlapResults.pdf",ntimes = 10000)
+
+#Female Placenta to Female Cortex# 
+#Run function#
+runPermutationAnalysis(FemalePlacentaDMRs, FemaleCortexDMRs, hg38, "FemalePlacentaAndFemaleCortex_DMROverlapResults.pdf",ntimes = 10000)
+
+##CfDNA DMRs - ASD to MO##
+#Male ASD to Male MO#
+#Define DMRs#
+MaleCfDNAMODMRs <- read.xlsx("MatBMI_05Cutoff_Males/DMRs/DMRs_annotated.xlsx", sheet = 1, cols = 1:3)
+MaleCfDNAMODMRs <- toGRanges(MaleCfDNAMODMRs)
+
+#Run function#
+runPermutationAnalysis(MaleCfDNAASDDMRs, MaleCfDNAMODMRs, hg38, "MaleCfDNAMOandASD_DMROverlapResults.pdf",ntimes = 10000)
+
+#Female ASD to Female MO#
+#Define DMRs
+FemaleCfDNAMODMRs <- read.xlsx("MatBMI_05Cutoff_Females/DMRs/DMRs_annotated.xlsx", sheet = 1, cols = 1:3)
+FemaleCfDNAMODMRs <- toGRanges(FemaleCfDNAMODMRs)
+
+#Run function#
+runPermutationAnalysis(FemaleCfDNAASDDMRs, FemaleCfDNAMODMRs, hg38, "FemaleCfDNAMOandASD_DMROverlapResults.pdf",ntimes = 10000)
