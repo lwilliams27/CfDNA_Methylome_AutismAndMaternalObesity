@@ -75,3 +75,141 @@ kegg_enrichment <- enrichKEGG(gene = gene_ids$ENTREZID, organism = "hsa", pvalue
 head(kegg_enrichment)
 write.csv(as.data.frame(kegg_enrichment), "FemalesOnlyCortexASDDMRGenes_kegg_enrichment_results.csv")
 plot_top_kegg(kegg_enrichment, "", "Top_FemaleASDDMR_KEGG.pdf")
+
+##Specific Sets##
+#Sex-Combined DMRichR Run ASD DMR Genes#
+SexComb_DMRs <- read.xlsx("10_DMRichR_NonASD_ASD/Sex_Combined/05_SexAdjusted/DMRs/DMRs_annotated.xlsx")
+gene_list <- SexComb_DMRs
+gene_ids <- bitr(gene_list, fromType="SYMBOL", toType="ENTREZID", OrgDb="org.Hs.eg.db")
+kegg_enrichment <- enrichKEGG(gene = gene_ids$ENTREZID, organism = "hsa", pvalueCutoff = 1)
+head(kegg_enrichment)
+write.csv(as.data.frame(kegg_enrichment), "SexCombined_ASDDMRGenes_kegg_enrichment_results.csv")
+plot_top_kegg(kegg_enrichment, "", "Top_SexCombASDDMR_KEGG.pdf")
+
+#227 female-specific ASD DMR Genes (Overlap CfDNA, Placenta, and Cortex)#
+# Load libraries
+library(clusterProfiler)
+library(org.Hs.eg.db)
+library(ggplot2)
+
+#Establish gene list#
+lists <- list(Male_cfDNA_ASD_DMR_Genes, Female_cfDNA_ASD_DMR_Genes, Male_Placenta_ASD_DMR_Genes, Female_Placenta_ASD_DMR_Genes, Male_Cortex_ASD_DMR_Genes, Female_Cortex_ASD_DMR_Genes)
+target_intersection <- Reduce(intersect, lists[c(2,4,6)])
+other_union <- Reduce(union, lists[c(1,3,5)])
+exclusive_genes <- setdiff(target_intersection, other_union)
+female_genes <- exclusive_genes
+
+gene_df <- bitr(female_genes, fromType = "SYMBOL", 
+                toType = "ENTREZID", 
+                OrgDb = org.Hs.eg.db)
+entrez_ids <- gene_df$ENTREZID
+
+kegg_result <- enrichKEGG(gene = entrez_ids, 
+                          organism = "hsa", 
+                          pAdjustMethod = "BH", 
+                          qvalueCutoff = 0.05)
+
+# Extract result table
+kegg_df <- kegg_result@result
+
+kegg_df <- as.data.frame(kegg_result@result) %>% arrange(qvalue) 
+kegg_df <- kegg_df[1:15,]
+# Plot using ggplot2
+ggplot(kegg_df, aes(x = reorder(Description, -qvalue), y = Count, fill = qvalue)) +
+  geom_bar(stat = "identity") +
+  coord_flip() +
+  scale_fill_gradient(low = "red", high = "blue", name = "Q-Value") +
+  scale_y_continuous(expand = c(0, 0)) + 
+  labs(title = "Conserved Female-Specific ASD DMR Genes - Top KEGG Enrichments",
+       x = "KEGG Pathway",
+       y = "Number of Genes") +
+  theme_minimal() +
+  theme(
+    axis.line = element_line(color = "black"),
+    axis.title = element_text(color = "black", size = 14),
+    axis.text = element_text(color = "black"),
+    legend.title = element_text(size = 14),
+    legend.text = element_text(size = 12)
+  ) +
+  expand_limits(y = max(kegg_df$Count) * 1.1)  
+
+#ASD-Specific and MO-Specific CfDNA DMR Genes#
+
+#Setup#
+library(clusterProfiler)
+library(org.Hs.eg.db)
+library(ggplot2)
+library(dplyr)
+
+asd_male <- Male_cfDNA_ASD_DMR_Genes
+asd_female <- Female_cfDNA_ASD_DMR_Genes
+mo_male <- MaleMOgenes
+mo_female <- Female_MO_Genes
+
+asd_shared <- intersect(asd_male, asd_female)
+mo_shared  <- intersect(mo_male, mo_female)
+
+asd_specific <- setdiff(asd_shared, union(mo_male, mo_female))
+mo_specific  <- setdiff(mo_shared, union(asd_male, asd_female))
+
+#KEGG Enrichment Function
+run_kegg_enrichment <- function(gene_symbols, title) {
+  gene_df <- bitr(gene_symbols, fromType = "SYMBOL", 
+                  toType = "ENTREZID", OrgDb = org.Hs.eg.db)
+  if (nrow(gene_df) == 0) {
+    warning(paste("No mappable ENTREZ IDs for:", title))
+    return(NULL)
+  }
+  
+  kegg_result <- enrichKEGG(
+    gene = gene_df$ENTREZID,
+    organism = "hsa",
+    pAdjustMethod = "BH",
+    qvalueCutoff = 0.05
+  )
+  
+  kegg_df <- as.data.frame(kegg_result@result) %>%
+    arrange(qvalue) %>%
+    head(15) %>%
+    mutate(
+      asterisks = case_when(
+        qvalue < 0.0001 ~ "****",
+        qvalue < 0.001  ~ "***",
+        qvalue < 0.01   ~ "**",
+        qvalue < 0.05   ~ "*",
+        TRUE            ~ ""
+      )
+    )
+  
+  if (nrow(kegg_df) == 0) {
+    warning(paste("No significant KEGG terms for:", title))
+    return(NULL)
+  }
+  
+  # Plotting
+  ggplot(kegg_df, aes(x = reorder(Description, -qvalue), y = Count, fill = qvalue)) +
+    geom_bar(stat = "identity") +
+    geom_text(aes(label = asterisks, y = Count * 1.03),  # Asterisks close to bar tops
+              size = 6, fontface = "bold", color = "black", hjust = 0) +
+    coord_flip() +
+    scale_fill_gradient(low = "red", high = "blue", name = "Q-Value") +
+    labs(
+      title = paste(title, "- Top KEGG Enrichments"),
+      x = "KEGG Pathway",
+      y = "Number of Genes"
+    ) +
+    theme_minimal() +
+    theme(
+      axis.text = element_text(color = "black"),
+      axis.title = element_text(size = 14, color = "black"),
+      legend.title = element_text(size = 14),
+      legend.text = element_text(size = 12)
+    ) +
+    expand_limits(y = max(kegg_df$Count) * 1.1)  
+}
+
+#Run enrichments
+plot_asd <- run_kegg_enrichment(asd_specific, "ASD-Specific Shared Genes")
+write.csv(kegg_df, file = "CrossTissueDMRs/ASDSpecificDMRGenes_KEGGEnrichment.csv")
+plot_mo  <- run_kegg_enrichment(mo_specific, "MO-Specific Shared Genes")
+write.csv(kegg_df, file = "CrossTissueDMRs/MOSpecificDMRGenes_KEGGEnrichment.csv")
